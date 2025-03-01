@@ -8,14 +8,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.productService = void 0;
 const client_1 = require("@prisma/client");
-const path_1 = __importDefault(require("path"));
-const fs_1 = __importDefault(require("fs"));
+const deleteFile_1 = require("../../helper/deleteFile");
 const prisma = new client_1.PrismaClient();
 const createProductIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* () {
     const body = req.body;
@@ -53,22 +49,13 @@ const deleteProduct = (id) => __awaiter(void 0, void 0, void 0, function* () {
             id
         }
     });
-    const deleteImage = (imagePath) => {
-        const fullPath = path_1.default.join(__dirname, '../../../../uploads', imagePath);
-        fs_1.default.unlink(fullPath, (err) => {
-            if (err) {
-                console.error(`Error deleting file ${imagePath}:`, err);
-                return;
-            }
-        });
-    };
     // Delete thumbnail image
     if (product && product.thumbnailImage) {
-        deleteImage(product.thumbnailImage);
+        (0, deleteFile_1.deleteImage)(product.thumbnailImage);
     }
     // Delete product images
     if (product && product.productImages && product.productImages.length > 0) {
-        product.productImages.forEach(deleteImage);
+        product.productImages.forEach(deleteFile_1.deleteImage);
     }
     const result = yield prisma.product.delete({
         where: {

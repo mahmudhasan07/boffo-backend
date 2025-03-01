@@ -1,7 +1,6 @@
 import { PrismaClient, Product } from "@prisma/client";
 import { Request } from "express";
-import path from "path";
-import fs from "fs";
+import { deleteImage } from "../../helper/deleteFile";
 
 const prisma = new PrismaClient();
 
@@ -61,15 +60,7 @@ const deleteProduct = async (id: string) => {
         }
     })
 
-    const deleteImage = (imagePath: string) => {
-        const fullPath = path.join(__dirname, '../../../../uploads', imagePath);
-        fs.unlink(fullPath, (err) => {
-            if (err) {
-                console.error(`Error deleting file ${imagePath}:`, err);
-                return
-            }
-        });
-    };
+
 
     // Delete thumbnail image
     if (product && product.thumbnailImage) {
