@@ -40,18 +40,16 @@ const createUserIntoDB = async (payload: User) => {
 //     const token = req.headers.authorization
 //     const payload = req.body
 //     const userInfo = token && jwtHelpers.tokenVerifier(token) as JwtPayload
-
-
 // }
 
 const verifyOTP = async (req: Request) => {
     const email = req.query.email as string
     console.log(email)
-    
+
     const otp = req.body
     const getOTP = myCache.get(email)
     console.log(getOTP, otp);
-    
+
     if (!getOTP) {
         throw new ApiError(StatusCodes.NOT_FOUND, "OTP is expired")
     }

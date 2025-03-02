@@ -3,6 +3,7 @@ import catchAsync from "../../../shared/catchAsync";
 import { productService } from "./productService";
 import sendResponse from "../../middleware/sendResponse";
 import { StatusCodes } from "http-status-codes";
+import { paginationSystem } from "../../helper/pagination";
 
 const productAddController = catchAsync(async (req: Request, res: Response) => {
     const result = await productService.createProductIntoDB(req);
@@ -10,11 +11,11 @@ const productAddController = catchAsync(async (req: Request, res: Response) => {
 })
 
 const productGetController = catchAsync(async (req: Request, res: Response) => {
-    const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
-    const page = req.query.page ? parseInt(req.query.page as string) : 1;
-    const result = await productService.getAllProducts();
 
-    sendResponse(res, { message: "Product fetched successfully", data: result.slice((page - 1) * limit, page * limit), statusCode: StatusCodes.OK, success: true, meta: { limit: limit, page: page, total: result.length, totalPage: Math.round(result?.length / limit) } });
+    const result = await productService.getAllProducts();
+    const { data, limit, page, total, totalPage } = await paginationSystem(result, req);
+
+    sendResponse(res, { message: "Product fetched successfully", data: data, statusCode: StatusCodes.OK, success: true, meta: { limit: limit, page: page, total: total, totalPage: totalPage } });
 })
 
 const productDeleteController = catchAsync(async (req: Request, res: Response) => {

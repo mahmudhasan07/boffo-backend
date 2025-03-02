@@ -32,7 +32,6 @@ model Product {
   discount       Float    @default(0)
   color          String[]
   price          Float
-  stock          Int
   thumbnailImage String
   productImages  String[]
   isFeature      Boolean? @default(false)

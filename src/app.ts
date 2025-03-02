@@ -8,7 +8,7 @@ import { MongoClient } from "mongodb"
 import { StatusCodes } from 'http-status-codes';
 import { PrismaConnection } from './shared/PrismaConnection';
 
-export const myCache = new NodeCache({ stdTTL: 180 })
+export const myCache = new NodeCache({ stdTTL: 300 })
 const app = express();
 
 export const corsOptions = {

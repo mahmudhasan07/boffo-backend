@@ -59,9 +59,6 @@ const deleteProduct = async (id: string) => {
             id
         }
     })
-
-
-
     // Delete thumbnail image
     if (product && product.thumbnailImage) {
         deleteImage(product.thumbnailImage);
