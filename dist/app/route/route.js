@@ -4,6 +4,7 @@ const express_1 = require("express");
 const userRoutes_1 = require("../modules/user/userRoutes");
 const authRoutes_1 = require("../modules/auth/authRoutes");
 const productRoutes_1 = require("../modules/product/productRoutes");
+const categoryRoutes_1 = require("../modules/category/categoryRoutes");
 const router = (0, express_1.Router)();
 const routes = [
     {
@@ -17,6 +18,10 @@ const routes = [
     {
         path: "/product",
         component: productRoutes_1.productRoutes
+    },
+    {
+        path: "/category",
+        component: categoryRoutes_1.categoryRoutes
     }
 ];
 routes.forEach(route => router.use(route.path, route.component));

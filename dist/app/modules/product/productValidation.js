@@ -8,7 +8,6 @@ exports.productValidation = zod_1.z.object({
     description: zod_1.z.string().min(3).max(255),
     thumbnailImage: zod_1.z.string().optional(),
     productImages: zod_1.z.array(zod_1.z.string()).optional(),
-    color: zod_1.z.array(zod_1.z.string()).optional(),
+    color: zod_1.z.string().optional(),
     size: zod_1.z.array(zod_1.z.string()).optional(),
-    stock: zod_1.z.number().positive()
 });

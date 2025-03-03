@@ -8,15 +8,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.productService = void 0;
 const client_1 = require("@prisma/client");
 const deleteFile_1 = require("../../helper/deleteFile");
-const ApiErrors_1 = __importDefault(require("../../error/ApiErrors"));
-const http_status_codes_1 = require("http-status-codes");
 const prisma = new client_1.PrismaClient();
 const createProductIntoDB = (body, file) => __awaiter(void 0, void 0, void 0, function* () {
     const thumbnailImage = Array.isArray(file) ? null : (file === null || file === void 0 ? void 0 : file.thumbnailImage) ? `${file.thumbnailImage[0].filename}` : null;
@@ -67,20 +62,4 @@ const deleteProduct = (id) => __awaiter(void 0, void 0, void 0, function* () {
     });
     return result;
 });
-const createCategoryIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const findCategory = yield prisma.category.findFirst({
-        where: {
-            name: payload.name
-        }
-    });
-    if (findCategory) {
-        throw new ApiErrors_1.default(http_status_codes_1.StatusCodes.CONFLICT, "Category already exists");
-    }
-    const result = yield prisma.category.create({
-        data: {
-            name: payload.name
-        }
-    });
-    return result;
-});
-exports.productService = { createProductIntoDB, getAllProducts, getSingleProduct, deleteProduct, createCategoryIntoDB };
+exports.productService = { createProductIntoDB, getAllProducts, getSingleProduct, deleteProduct };

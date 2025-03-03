@@ -30,10 +30,10 @@ model Product {
   description    String
   size           String[]
   discount       Float    @default(0)
-  color          String[]
+  color          String
   price          Float
-  thumbnailImage String
-  productImages  String[]
+  thumbnailImage String?
+  productImages  String[] @default([])
   category       String
   status         Status   @default(ACTIVE)
   gender         Gender

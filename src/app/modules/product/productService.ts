@@ -25,7 +25,28 @@ const createProductIntoDB = async (body: any, file: any) => {
 
 }
 
-const getAllProducts = async () => {
+const getAllProducts = async (category: string) => {
+
+    if (category) {
+        const products = await prisma.product.findMany({
+            where: {
+                category: {
+                    equals: category,
+                    mode: "insensitive"
+                }
+            }
+        })
+
+        const response = products.map((product) => {
+            return {
+                ...product,
+                productImages: product.productImages ? product.productImages.map((image) => `${process.env.BASE_URL}/uploads/${image}`) : null,
+                thumbnailImage: product.thumbnailImage ? `${process.env.BASE_URL}/uploads/${product.thumbnailImage}` : null
+            }
+        })
+        return response;
+    }
+
     const products = await prisma.product.findMany();
     const response = products.map((product) => {
         return {
@@ -70,24 +91,11 @@ const deleteProduct = async (id: string) => {
     return result;
 }
 
-const createCategoryIntoDB = async (payload: { name: string }) => {
+const updateProduct = async (id: string, body: any, isFeatures: string) => {
 
-    const findCategory = await prisma.category.findFirst({
-        where: {
-            name: payload.name
-        }
-    })
-    if (findCategory) {
-        throw new ApiError(StatusCodes.CONFLICT, "Category already exists")
-    }
-
-    const result = await prisma.category.create({
-        data: {
-            name: payload.name
-        }
-    })
-    return result
 }
 
 
-export const productService = { createProductIntoDB, getAllProducts, getSingleProduct, deleteProduct, createCategoryIntoDB }
+
+
+export const productService = { createProductIntoDB, getAllProducts, getSingleProduct, deleteProduct, updateProduct }
