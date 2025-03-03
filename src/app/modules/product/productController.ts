@@ -6,7 +6,9 @@ import { StatusCodes } from "http-status-codes";
 import { paginationSystem } from "../../helper/pagination";
 
 const productAddController = catchAsync(async (req: Request, res: Response) => {
-    const result = await productService.createProductIntoDB(req);
+    const body = req.body;
+    const file = req.files
+    const result = await productService.createProductIntoDB(body, file);
     sendResponse(res, { message: "Product added successfully", data: result, statusCode: StatusCodes.OK, success: true });
 })
 
@@ -28,6 +30,11 @@ const productGetSingleController = catchAsync(async (req: Request, res: Response
     const { id } = req.params;
     const result = await productService.getSingleProduct(id);
     sendResponse(res, { message: "Product fetched successfully", data: result, statusCode: StatusCodes.OK, success: true });
+})
+
+const createCategoryController = catchAsync(async (req: Request, res: Response) => {
+    const result = await productService.createCategoryIntoDB(req.body)
+    sendResponse(res, { statusCode: StatusCodes.CREATED, message: "Category added successfully", data: result, success: true })
 })
 
 

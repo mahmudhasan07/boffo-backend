@@ -87,4 +87,4 @@ const updateUserFromDB = (req) => __awaiter(void 0, void 0, void 0, function* ()
     });
     return result;
 });
-exports.userServices = { createUserIntoDB, updateUserFromDB, verifyOTP };
+exports.userServices = { createUserIntoDB, updateUserFromDB, verifyOTP, };

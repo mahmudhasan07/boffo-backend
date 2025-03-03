@@ -96,4 +96,6 @@ const updateUserFromDB = async (req: Request) => {
 }
 
 
-export const userServices = { createUserIntoDB, updateUserFromDB, verifyOTP }
+
+
+export const userServices = { createUserIntoDB, updateUserFromDB, verifyOTP,  }

@@ -1,21 +1,17 @@
 import { PrismaClient, Product } from "@prisma/client";
-import { Request } from "express";
 import { deleteImage } from "../../helper/deleteFile";
+import ApiError from "../../error/ApiErrors";
+import { StatusCodes } from "http-status-codes";
 
 const prisma = new PrismaClient();
 
-const createProductIntoDB = async (req: Request) => {
-    const body = req.body;
-    const file = req.files
+const createProductIntoDB = async (body: any, file: any) => {
 
     const thumbnailImage = Array.isArray(file) ? null : file?.thumbnailImage ? `${file.thumbnailImage[0].filename}` : null;
     let productImages: string[] = [];
     if (!Array.isArray(file) && file?.productImages) {
         productImages = file.productImages.map((image: any) => `${image.filename}`);
     }
-
-
-
     const product: Product = {
         ...body,
         thumbnailImage,
@@ -25,10 +21,7 @@ const createProductIntoDB = async (req: Request) => {
     const result = await prisma.product.create({
         data: product
     })
-
     return result;
-
-
 
 }
 
@@ -77,5 +70,24 @@ const deleteProduct = async (id: string) => {
     return result;
 }
 
+const createCategoryIntoDB = async (payload: { name: string }) => {
 
-export const productService = { createProductIntoDB, getAllProducts, getSingleProduct, deleteProduct }
+    const findCategory = await prisma.category.findFirst({
+        where: {
+            name: payload.name
+        }
+    })
+    if (findCategory) {
+        throw new ApiError(StatusCodes.CONFLICT, "Category already exists")
+    }
+
+    const result = await prisma.category.create({
+        data: {
+            name: payload.name
+        }
+    })
+    return result
+}
+
+
+export const productService = { createProductIntoDB, getAllProducts, getSingleProduct, deleteProduct, createCategoryIntoDB }

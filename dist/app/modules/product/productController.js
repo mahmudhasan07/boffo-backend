@@ -17,15 +17,17 @@ const catchAsync_1 = __importDefault(require("../../../shared/catchAsync"));
 const productService_1 = require("./productService");
 const sendResponse_1 = __importDefault(require("../../middleware/sendResponse"));
 const http_status_codes_1 = require("http-status-codes");
+const pagination_1 = require("../../helper/pagination");
 const productAddController = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield productService_1.productService.createProductIntoDB(req);
+    const body = req.body;
+    const file = req.files;
+    const result = yield productService_1.productService.createProductIntoDB(body, file);
     (0, sendResponse_1.default)(res, { message: "Product added successfully", data: result, statusCode: http_status_codes_1.StatusCodes.OK, success: true });
 }));
 const productGetController = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const limit = req.query.limit ? parseInt(req.query.limit) : 10;
-    const page = req.query.page ? parseInt(req.query.page) : 1;
     const result = yield productService_1.productService.getAllProducts();
-    (0, sendResponse_1.default)(res, { message: "Product fetched successfully", data: result.slice((page - 1) * limit, page * limit), statusCode: http_status_codes_1.StatusCodes.OK, success: true, meta: { limit: limit, page: page, total: result.length, totalPage: Math.round((result === null || result === void 0 ? void 0 : result.length) / limit) } });
+    const { data, limit, page, total, totalPage } = yield (0, pagination_1.paginationSystem)(result, req);
+    (0, sendResponse_1.default)(res, { message: "Product fetched successfully", data: data, statusCode: http_status_codes_1.StatusCodes.OK, success: true, meta: { limit: limit, page: page, total: total, totalPage: totalPage } });
 }));
 const productDeleteController = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
@@ -36,5 +38,9 @@ const productGetSingleController = (0, catchAsync_1.default)((req, res) => __awa
     const { id } = req.params;
     const result = yield productService_1.productService.getSingleProduct(id);
     (0, sendResponse_1.default)(res, { message: "Product fetched successfully", data: result, statusCode: http_status_codes_1.StatusCodes.OK, success: true });
+}));
+const createCategoryController = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield productService_1.productService.createCategoryIntoDB(req.body);
+    (0, sendResponse_1.default)(res, { statusCode: http_status_codes_1.StatusCodes.CREATED, message: "Category added successfully", data: result, success: true });
 }));
 exports.productController = { productAddController, productGetController, productDeleteController, productGetSingleController };

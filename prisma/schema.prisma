@@ -34,9 +34,19 @@ model Product {
   price          Float
   thumbnailImage String
   productImages  String[]
+  category       String
+  status         Status   @default(ACTIVE)
+  gender         Gender
   isFeature      Boolean? @default(false)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+}
+
+model Category {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Cart {
@@ -67,4 +77,9 @@ enum Status {
   PENDING
   ACTIVE
   BLOCKED
+}
+
+enum Gender {
+  MALE
+  FEMALE
 }

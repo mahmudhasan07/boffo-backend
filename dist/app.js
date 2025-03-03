@@ -22,7 +22,7 @@ const globalErrorHandler_1 = __importDefault(require("./app/middleware/globalErr
 const mongodb_1 = require("mongodb");
 const http_status_codes_1 = require("http-status-codes");
 const PrismaConnection_1 = require("./shared/PrismaConnection");
-exports.myCache = new node_cache_1.default({ stdTTL: 180 });
+exports.myCache = new node_cache_1.default({ stdTTL: 300 });
 const app = (0, express_1.default)();
 exports.corsOptions = {
     origin: [
