@@ -20,5 +20,15 @@ const updateUserController = catchAsync(async (req: Request, res: Response) => {
 })
 
 
+const updatePasswordController = catchAsync(async (req: Request, res: Response) => {
 
-export const userController = { createUserController, updateUserController, OTPVerifyController }
+    const body = req.body
+    const token = req.headers.authorization as string
+
+    const result = await userServices.updatePasswordFromDB({ body, token })
+    sendResponse(res, { statusCode: StatusCodes.OK, message: "Password updated successfully", data: result, success: true })
+
+})
+
+
+export const userController = { createUserController, updateUserController, OTPVerifyController, updatePasswordController }

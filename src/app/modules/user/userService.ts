@@ -95,7 +95,39 @@ const updateUserFromDB = async (req: Request) => {
     return result
 }
 
+const updatePasswordFromDB = async ({ token, body }: { body: any, token: string }) => {
+    const userInfo = token && jwt.decode(token) as { id: string, email: string }
+    const findUser = await prisma.user.findUnique({
+        where: {
+            email: userInfo && userInfo?.email
+        }
+    })
+    if (!findUser) {
+        throw new ApiError(StatusCodes.NOT_FOUND, "User is not exists")
+    }
+
+    const newPass = await hash(body.password, 10)
+    const result = await prisma.user.update({
+        where: {
+            email: userInfo && userInfo?.email
+        },
+        data: {
+            password: newPass
+        },
+        select: {
+            id: true,
+            email: true,
+            role: true,
+            status: true,
+            createdAt: true,
+            updatedAt: true
+        }
+    })
+
+    return result
+}
 
 
 
-export const userServices = { createUserIntoDB, updateUserFromDB, verifyOTP,  }
+
+export const userServices = { createUserIntoDB, updateUserFromDB, verifyOTP, updatePasswordFromDB }
