@@ -42,7 +42,6 @@ const getAllProducts = (category) => __awaiter(void 0, void 0, void 0, function*
         return response;
     }
     const products = yield prisma.product.findMany();
-    console.log(products);
     const response = products.map((product) => {
         return Object.assign(Object.assign({}, product), { productImages: product.productImages ? product.productImages.map((image) => `${process.env.BASE_URL}/uploads/${image}`) : null, thumbnailImage: product.thumbnailImage ? `${process.env.BASE_URL}/uploads/${product.thumbnailImage}` : null });
     });
