@@ -22,6 +22,7 @@ const globalErrorHandler_1 = __importDefault(require("./app/middleware/globalErr
 const mongodb_1 = require("mongodb");
 const http_status_codes_1 = require("http-status-codes");
 const PrismaConnection_1 = require("./shared/PrismaConnection");
+const path_1 = __importDefault(require("path"));
 exports.myCache = new node_cache_1.default({ stdTTL: 300 });
 const app = (0, express_1.default)();
 exports.corsOptions = {
@@ -38,6 +39,7 @@ app.use((0, cors_1.default)(exports.corsOptions));
 app.get('/', (req, res) => {
     res.send('Welcome to development world');
 });
+app.use("/uploads", express_1.default.static(path_1.default.join(__dirname, "..", "uploads")));
 const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const conn = yield new mongodb_1.MongoClient(process.env.DATABASE_URL).connect();

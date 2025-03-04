@@ -26,7 +26,21 @@ const createProductIntoDB = (body, file) => __awaiter(void 0, void 0, void 0, fu
     });
     return result;
 });
-const getAllProducts = () => __awaiter(void 0, void 0, void 0, function* () {
+const getAllProducts = (category) => __awaiter(void 0, void 0, void 0, function* () {
+    if (category) {
+        const products = yield prisma.product.findMany({
+            where: {
+                category: {
+                    equals: category,
+                    mode: "insensitive"
+                }
+            }
+        });
+        const response = products.map((product) => {
+            return Object.assign(Object.assign({}, product), { productImages: product.productImages ? product.productImages.map((image) => `${process.env.BASE_URL}/uploads/${image}`) : null, thumbnailImage: product.thumbnailImage ? `${process.env.BASE_URL}/uploads/${product.thumbnailImage}` : null });
+        });
+        return response;
+    }
     const products = yield prisma.product.findMany();
     const response = products.map((product) => {
         return Object.assign(Object.assign({}, product), { productImages: product.productImages ? product.productImages.map((image) => `${process.env.BASE_URL}/uploads/${image}`) : null, thumbnailImage: product.thumbnailImage ? `${process.env.BASE_URL}/uploads/${product.thumbnailImage}` : null });
@@ -62,4 +76,6 @@ const deleteProduct = (id) => __awaiter(void 0, void 0, void 0, function* () {
     });
     return result;
 });
-exports.productService = { createProductIntoDB, getAllProducts, getSingleProduct, deleteProduct };
+const updateProduct = (id, body, isFeatures) => __awaiter(void 0, void 0, void 0, function* () {
+});
+exports.productService = { createProductIntoDB, getAllProducts, getSingleProduct, deleteProduct, updateProduct };

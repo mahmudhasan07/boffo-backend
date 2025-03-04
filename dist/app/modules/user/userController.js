@@ -21,6 +21,10 @@ const createUserController = (0, catchAsync_1.default)((req, res) => __awaiter(v
     const result = yield userService_1.userServices.createUserIntoDB(req.body);
     (0, sendResponse_1.default)(res, { statusCode: http_status_codes_1.StatusCodes.CREATED, message: "Please check your email address to verify your account", data: result, success: true });
 }));
+const getAllUsersController = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield userService_1.userServices.allUserFormDB();
+    (0, sendResponse_1.default)(res, { statusCode: http_status_codes_1.StatusCodes.OK, message: "All users", success: true, data: result });
+}));
 const OTPVerifyController = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield userService_1.userServices.verifyOTP(req);
     (0, sendResponse_1.default)(res, { statusCode: http_status_codes_1.StatusCodes.OK, message: "OTP verified successfully", success: true });
@@ -29,4 +33,10 @@ const updateUserController = (0, catchAsync_1.default)((req, res) => __awaiter(v
     const result = yield userService_1.userServices.updateUserFromDB(req);
     (0, sendResponse_1.default)(res, { statusCode: http_status_codes_1.StatusCodes.OK, message: "User updated successfully", data: result, success: true });
 }));
-exports.userController = { createUserController, updateUserController, OTPVerifyController };
+const updatePasswordController = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const body = req.body;
+    const token = req.headers.authorization;
+    const result = yield userService_1.userServices.updatePasswordFromDB({ body, token });
+    (0, sendResponse_1.default)(res, { statusCode: http_status_codes_1.StatusCodes.OK, message: "Password updated successfully", data: result, success: true });
+}));
+exports.userController = { createUserController, updateUserController, OTPVerifyController, updatePasswordController, getAllUsersController };

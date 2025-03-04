@@ -25,7 +25,8 @@ const productAddController = (0, catchAsync_1.default)((req, res) => __awaiter(v
     (0, sendResponse_1.default)(res, { message: "Product added successfully", data: result, statusCode: http_status_codes_1.StatusCodes.OK, success: true });
 }));
 const productGetController = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield productService_1.productService.getAllProducts();
+    const category = req.query.category;
+    const result = yield productService_1.productService.getAllProducts(category);
     const { data, limit, page, total, totalPage } = yield (0, pagination_1.paginationSystem)(result, req);
     (0, sendResponse_1.default)(res, { message: "Product fetched successfully", data: data, statusCode: http_status_codes_1.StatusCodes.OK, success: true, meta: { limit: limit, page: page, total: total, totalPage: totalPage } });
 }));
@@ -39,4 +40,11 @@ const productGetSingleController = (0, catchAsync_1.default)((req, res) => __awa
     const result = yield productService_1.productService.getSingleProduct(id);
     (0, sendResponse_1.default)(res, { message: "Product fetched successfully", data: result, statusCode: http_status_codes_1.StatusCodes.OK, success: true });
 }));
-exports.productController = { productAddController, productGetController, productDeleteController, productGetSingleController };
+const productUpdateController = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const isFeatures = req.query.isFeatures;
+    const body = req.body;
+    const result = yield productService_1.productService.updateProduct(id, body, isFeatures);
+    (0, sendResponse_1.default)(res, { message: "Product updated successfully", data: result, statusCode: http_status_codes_1.StatusCodes.OK, success: true });
+}));
+exports.productController = { productAddController, productGetController, productDeleteController, productGetSingleController, productUpdateController };

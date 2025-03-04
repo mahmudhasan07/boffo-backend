@@ -37,6 +37,10 @@ const createUserIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function
     (0, OTPFn_1.OTPFn)(payload.email);
     return result;
 });
+const allUserFormDB = () => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield prisma.user.findMany({});
+    return result;
+});
 // const verifyUser = async (req: Request) => {
 //     const token = req.headers.authorization
 //     const payload = req.body
@@ -87,4 +91,33 @@ const updateUserFromDB = (req) => __awaiter(void 0, void 0, void 0, function* ()
     });
     return result;
 });
-exports.userServices = { createUserIntoDB, updateUserFromDB, verifyOTP, };
+const updatePasswordFromDB = (_a) => __awaiter(void 0, [_a], void 0, function* ({ token, body }) {
+    const userInfo = token && jsonwebtoken_1.default.decode(token);
+    const findUser = yield prisma.user.findUnique({
+        where: {
+            email: userInfo && (userInfo === null || userInfo === void 0 ? void 0 : userInfo.email)
+        }
+    });
+    if (!findUser) {
+        throw new ApiErrors_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "User is not exists");
+    }
+    const newPass = yield (0, bcrypt_1.hash)(body.password, 10);
+    const result = yield prisma.user.update({
+        where: {
+            email: userInfo && (userInfo === null || userInfo === void 0 ? void 0 : userInfo.email)
+        },
+        data: {
+            password: newPass
+        },
+        select: {
+            id: true,
+            email: true,
+            role: true,
+            status: true,
+            createdAt: true,
+            updatedAt: true
+        }
+    });
+    return result;
+});
+exports.userServices = { createUserIntoDB, updateUserFromDB, verifyOTP, updatePasswordFromDB, allUserFormDB };

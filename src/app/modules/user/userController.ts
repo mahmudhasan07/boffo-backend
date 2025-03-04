@@ -9,6 +9,11 @@ const createUserController = catchAsync(async (req: Request, res: Response) => {
     sendResponse(res, { statusCode: StatusCodes.CREATED, message: "Please check your email address to verify your account", data: result, success: true })
 })
 
+const getAllUsersController = catchAsync(async (req: Request, res: Response) => {
+    const result = await userServices.allUserFormDB()
+    sendResponse(res, { statusCode: StatusCodes.OK, message: "All users", success: true, data: result })
+})
+
 const OTPVerifyController = catchAsync(async (req: Request, res: Response) => {
     const result = await userServices.verifyOTP(req)
     sendResponse(res, { statusCode: StatusCodes.OK, message: "OTP verified successfully", success: true })
@@ -31,4 +36,4 @@ const updatePasswordController = catchAsync(async (req: Request, res: Response) 
 })
 
 
-export const userController = { createUserController, updateUserController, OTPVerifyController, updatePasswordController }
+export const userController = { createUserController, updateUserController, OTPVerifyController, updatePasswordController, getAllUsersController }

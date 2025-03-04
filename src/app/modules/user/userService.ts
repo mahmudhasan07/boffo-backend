@@ -35,6 +35,11 @@ const createUserIntoDB = async (payload: User) => {
     return result
 }
 
+const allUserFormDB = async () => {
+    const result = await prisma.user.findMany({})
+    return result
+}
+
 
 // const verifyUser = async (req: Request) => {
 //     const token = req.headers.authorization
@@ -130,4 +135,4 @@ const updatePasswordFromDB = async ({ token, body }: { body: any, token: string 
 
 
 
-export const userServices = { createUserIntoDB, updateUserFromDB, verifyOTP, updatePasswordFromDB }
+export const userServices = { createUserIntoDB, updateUserFromDB, verifyOTP, updatePasswordFromDB, allUserFormDB }
