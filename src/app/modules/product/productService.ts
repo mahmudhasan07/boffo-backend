@@ -48,6 +48,8 @@ const getAllProducts = async (category: string) => {
     }
 
     const products = await prisma.product.findMany();
+    console.log(products);
+
     const response = products.map((product) => {
         return {
             ...product,
