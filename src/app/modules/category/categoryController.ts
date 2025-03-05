@@ -10,7 +10,8 @@ const createCategoryController = catchAsync(async (req: Request, res: Response) 
 })
 
 const getCategoryController = catchAsync(async (req: Request, res: Response) => {
-    const result = await categoryService.getCategories()
+    const gender = req.query.gender as string
+    const result = await categoryService.getCategories(gender)
     sendResponse(res, { statusCode: StatusCodes.OK, message: "Categories fetched successfully", data: result, success: true })
 })
 

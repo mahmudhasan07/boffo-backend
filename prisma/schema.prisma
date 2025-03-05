@@ -40,11 +40,13 @@ model Product {
   isFeature      Boolean? @default(false)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+  Items          Items[]
 }
 
 model Category {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String
+  gender    Gender
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -60,12 +62,21 @@ model Cart {
 
 model Order {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId    String
-  productId String
-  quantity  Int
-  status    String
+  userId    String   @db.ObjectId
+  items     Items[]
+  isPayment Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Items {
+  id             String  @id @default(auto()) @map("_id") @db.ObjectId
+  productId      String  @db.ObjectId
+  quantity       Int
+  price          Float
+  productDetails Product @relation(fields: [productId], references: [id])
+  orderId        String? @db.ObjectId
+  Order          Order?  @relation(fields: [orderId], references: [id])
 }
 
 enum Role {
