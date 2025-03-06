@@ -20,20 +20,27 @@ const prisma = new client_1.PrismaClient();
 const createCategoryIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const findCategory = yield prisma.category.findFirst({
         where: {
-            name: payload.name
+            name: payload.name,
+            gender: payload.gender
         }
     });
     if (findCategory) {
         throw new ApiErrors_1.default(http_status_codes_1.StatusCodes.CONFLICT, "Category already exists");
     }
     const result = yield prisma.category.create({
-        data: {
-            name: payload.name
-        }
+        data: Object.assign({}, payload)
     });
     return result;
 });
-const getCategories = () => __awaiter(void 0, void 0, void 0, function* () {
+const getCategories = (gender) => __awaiter(void 0, void 0, void 0, function* () {
+    if (gender) {
+        const result = yield prisma.category.findMany({
+            where: {
+                gender: gender.toUpperCase()
+            }
+        });
+        return result;
+    }
     const result = yield prisma.category.findMany();
     return result;
 });

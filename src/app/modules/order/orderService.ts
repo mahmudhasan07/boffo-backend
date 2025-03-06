@@ -12,4 +12,4 @@ const createOrder = async (payload: any, id: string) => {
     return result
 }
 
-const orderService = { createOrder }
+export const orderService = { createOrder }

@@ -3,6 +3,7 @@ import { userRoutes } from "../modules/user/userRoutes"
 import { authRoutes } from "../modules/auth/authRoutes"
 import { productRoutes } from "../modules/product/productRoutes"
 import { categoryRoutes } from "../modules/category/categoryRoutes"
+import { orderRoutes } from "../modules/order/orderRoutes"
 
 const router = Router()
 const routes = [
@@ -21,6 +22,10 @@ const routes = [
     {
         path: "/category",
         component: categoryRoutes
+    },
+    {
+        path: "/order",
+        component: orderRoutes
     }
 ]
 
