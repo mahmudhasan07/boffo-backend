@@ -5,20 +5,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.jwtHelpers = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const tokenCreator = (payload) => {
-    const token = jsonwebtoken_1.default.sign(payload, process.env.TOKEN_SECRET, { expiresIn: "24h" });
+const generateToken = (payload, secret, expiresIn) => {
+    const token = jsonwebtoken_1.default.sign(payload, secret, {
+        algorithm: 'HS256',
+        expiresIn
+    });
     return token;
 };
-const tokenVerifier = (token) => {
-    const verified = jsonwebtoken_1.default.verify(token, process.env.TOKEN_SECRET);
-    return verified;
-};
-const tokenDecoder = (token) => {
-    const decoded = jsonwebtoken_1.default.decode(token);
-    return decoded;
+const verifyToken = (token, secret) => {
+    return jsonwebtoken_1.default.verify(token, secret);
 };
 exports.jwtHelpers = {
-    tokenCreator,
-    tokenVerifier,
-    tokenDecoder
+    generateToken,
+    verifyToken
 };

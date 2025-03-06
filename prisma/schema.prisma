@@ -61,15 +61,15 @@ model Cart {
 }
 
 model Order {
-  id                 String           @id @default(auto()) @map("_id") @db.ObjectId
-  userId             String           @db.ObjectId
-  items              Items            @relation(fields: [itemsId], references: [id])
-  info               UserOrderDetails @relation(fields: [userOrderDetailsId], references: [id])
-  isPayment          Boolean          @default(true)
-  createdAt          DateTime         @default(now())
-  updatedAt          DateTime         @updatedAt
-  userOrderDetailsId String           @db.ObjectId
-  itemsId            String           @db.ObjectId
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String   @db.ObjectId
+  paymentId  String
+  totalPrice Int
+  items      Items[]
+  info       Json[]
+  isPayment  Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model Items {
@@ -78,20 +78,8 @@ model Items {
   quantity       Int
   price          Float
   productDetails Product @relation(fields: [productId], references: [id])
-  Order          Order[]
-}
-
-model UserOrderDetails {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId   String  @db.ObjectId
-  name     String
-  email    Status
-  phone    String
-  address  String
-  city     String
-  thana    String
-  postCode String
-  Order    Order[]
+  Order          Order   @relation(fields: [orderId], references: [id])
+  orderId        String  @db.ObjectId
 }
 
 enum Role {

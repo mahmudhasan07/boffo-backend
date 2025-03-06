@@ -14,15 +14,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.orderController = void 0;
 const catchAsync_1 = __importDefault(require("../../../shared/catchAsync"));
-const orderService_1 = require("./orderService");
-const jsonwebtoken_1 = require("jsonwebtoken");
-const sendResponse_1 = __importDefault(require("../../middleware/sendResponse"));
-const http_status_codes_1 = require("http-status-codes");
 const createOrderController = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const body = req.body;
-    const token = req.headers.authorization;
-    const { id } = (0, jsonwebtoken_1.decode)(token);
-    const result = yield orderService_1.orderService.createOrder(body, id);
-    (0, sendResponse_1.default)(res, { statusCode: http_status_codes_1.StatusCodes.CREATED, message: "Order successfully created", success: true, data: result });
+    const { id } = req === null || req === void 0 ? void 0 : req.user;
+    console.log(id);
+    // const result = await orderService.createOrder(body, id)
+    // sendResponse(res, { statusCode: StatusCodes.CREATED, message: "Order successfully created", success: true, data: result })
 }));
 exports.orderController = { createOrderController };

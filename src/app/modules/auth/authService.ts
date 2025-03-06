@@ -4,6 +4,7 @@ import { jwtHelpers } from "../../helper/jwtHelper";
 import { Secret } from "jsonwebtoken";
 import ApiError from "../../error/ApiErrors";
 import { OTPFn } from "../../helper/OTPFn";
+import { jwt_secret } from "../../../config/secret";
 
 const prisma = new PrismaClient();
 const logInFromDB = async (payload: { email: string, password: string }) => {
@@ -25,7 +26,7 @@ const logInFromDB = async (payload: { email: string, password: string }) => {
         throw new ApiError(401, "Please check your email address to verify your account")
     }
     const { password, ...userInfo } = findUser
-    const token = jwtHelpers.tokenCreator(userInfo) as Secret
+    const token = jwtHelpers.generateToken(userInfo, jwt_secret, "1hr") as Secret
     return { accessToken: token, userInfo }
 }
 
@@ -38,7 +39,7 @@ const forgetPassword = async (payload: { email: string }) => {
     if (!findUser) {
         throw new Error("User not found")
     }
-    const token = jwtHelpers.tokenCreator({ email: findUser.email, id: findUser?.id, role: findUser?.role }) as Secret
+    const token = jwtHelpers.generateToken({ email: findUser.email, id: findUser?.id, role: findUser?.role }, jwt_secret, "1hr") as Secret
     return token
 }
 

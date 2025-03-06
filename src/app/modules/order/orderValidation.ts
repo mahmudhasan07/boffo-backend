@@ -1,11 +1,15 @@
 import { z } from "zod";
 
-const orderConfirmValidation = z.object({
-    item: z.object({
-        productId: z.string().min(1, "product id is required"),
-        quantity: z.number().positive("quantity must be positive"),
-        price: z.number().positive("quantity must be positive"),
-    }),
+export const orderConfirmValidation = z.object({
+    paymentId: z.string(),
+    totalPrice: z.number(),
+    item: z.array(
+        z.object({
+            productId: z.string().min(1, "product id is required"),
+            quantity: z.number().positive("quantity must be positive"),
+            price: z.number().positive("quantity must be positive"),
+        })
+    ),
     info: z.object({
         name: z.string().min(1, "name required"),
         email: z.string().email("email is required"),

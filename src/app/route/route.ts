@@ -4,6 +4,7 @@ import { authRoutes } from "../modules/auth/authRoutes"
 import { productRoutes } from "../modules/product/productRoutes"
 import { categoryRoutes } from "../modules/category/categoryRoutes"
 import { orderRoutes } from "../modules/order/orderRoutes"
+import { paymentRoutes } from "../modules/payment/paymentRoutes"
 
 const router = Router()
 const routes = [
@@ -26,6 +27,10 @@ const routes = [
     {
         path: "/order",
         component: orderRoutes
+    },
+    {
+        path: "/payment",
+        component: paymentRoutes
     }
 ]
 
