@@ -41,6 +41,7 @@ model Product {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   Items          Items[]
+  
 }
 
 model Category {
@@ -82,6 +83,8 @@ model Items {
   productDetails Product @relation(fields: [productId], references: [id])
   Order          Order   @relation(fields: [orderId], references: [id])
   orderId        String  @db.ObjectId
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 enum Role {
