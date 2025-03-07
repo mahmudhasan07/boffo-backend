@@ -13,9 +13,34 @@ exports.orderService = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 const createOrder = (payload, id) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const result = yield prisma.order.create({
-        data: Object.assign(Object.assign({}, payload), { userId: id })
+        data: {
+            paymentId: payload.paymentId,
+            userId: id,
+            totalPrice: payload.totalPrice,
+            info: payload.info, // Ensure info is an object
+            items: {
+                create: (_a = payload.items) !== null && _a !== void 0 ? _a : [] // Ensure items is an array
+            }
+        }
     });
     return result;
 });
-exports.orderService = { createOrder };
+const userOrdersFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield prisma.order.findMany({
+        where: {
+            userId: id
+        }
+    });
+    return result;
+});
+const allOrdersFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield prisma.order.findMany({
+        include: {
+            items: true
+        }
+    });
+    return result;
+});
+exports.orderService = { createOrder, userOrdersFromDB, allOrdersFromDB };

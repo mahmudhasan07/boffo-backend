@@ -29,6 +29,8 @@ const bcrypt_1 = require("bcrypt");
 const jwtHelper_1 = require("../../helper/jwtHelper");
 const ApiErrors_1 = __importDefault(require("../../error/ApiErrors"));
 const OTPFn_1 = require("../../helper/OTPFn");
+const secret_1 = require("../../../config/secret");
+const http_status_codes_1 = require("http-status-codes");
 const prisma = new client_1.PrismaClient();
 const logInFromDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const findUser = yield prisma.user.findUnique({
@@ -37,18 +39,18 @@ const logInFromDB = (payload) => __awaiter(void 0, void 0, void 0, function* () 
         }
     });
     if (!findUser) {
-        throw new Error("User not found");
+        throw new ApiErrors_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "User not found");
     }
     const comparePassword = yield (0, bcrypt_1.compare)(payload.password, findUser.password);
     if (!comparePassword) {
-        throw new Error("Invalid password");
+        throw new ApiErrors_1.default(http_status_codes_1.StatusCodes.UNAUTHORIZED, "Invalid Password");
     }
     if (findUser.status === "PENDING") {
         (0, OTPFn_1.OTPFn)(findUser.email);
         throw new ApiErrors_1.default(401, "Please check your email address to verify your account");
     }
     const { password } = findUser, userInfo = __rest(findUser, ["password"]);
-    const token = jwtHelper_1.jwtHelpers.tokenCreator(userInfo);
+    const token = jwtHelper_1.jwtHelpers.generateToken(userInfo, secret_1.jwt_secret, "1hr");
     return { accessToken: token, userInfo };
 });
 const forgetPassword = (payload) => __awaiter(void 0, void 0, void 0, function* () {
@@ -60,7 +62,7 @@ const forgetPassword = (payload) => __awaiter(void 0, void 0, void 0, function* 
     if (!findUser) {
         throw new Error("User not found");
     }
-    const token = jwtHelper_1.jwtHelpers.tokenCreator({ email: findUser.email, id: findUser === null || findUser === void 0 ? void 0 : findUser.id, role: findUser === null || findUser === void 0 ? void 0 : findUser.role });
+    const token = jwtHelper_1.jwtHelpers.generateToken({ email: findUser.email, id: findUser === null || findUser === void 0 ? void 0 : findUser.id, role: findUser === null || findUser === void 0 ? void 0 : findUser.role }, secret_1.jwt_secret, "1hr");
     return token;
 });
 exports.authService = { logInFromDB, forgetPassword };

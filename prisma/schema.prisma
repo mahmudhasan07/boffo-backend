@@ -66,8 +66,9 @@ model Order {
   paymentId  String
   totalPrice Int
   items      Items[]
-  info       Json[]
+  info       Json
   isPayment  Boolean  @default(true)
+  status     Status   @default(PENDING)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }

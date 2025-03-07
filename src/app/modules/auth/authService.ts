@@ -5,6 +5,7 @@ import { Secret } from "jsonwebtoken";
 import ApiError from "../../error/ApiErrors";
 import { OTPFn } from "../../helper/OTPFn";
 import { jwt_secret } from "../../../config/secret";
+import { StatusCodes } from "http-status-codes";
 
 const prisma = new PrismaClient();
 const logInFromDB = async (payload: { email: string, password: string }) => {
@@ -14,11 +15,11 @@ const logInFromDB = async (payload: { email: string, password: string }) => {
         }
     })
     if (!findUser) {
-        throw new Error("User not found")
+        throw new ApiError(StatusCodes.NOT_FOUND, "User not found")
     }
     const comparePassword = await compare(payload.password, findUser.password)
     if (!comparePassword) {
-        throw new Error("Invalid password")
+        throw new ApiError(StatusCodes.UNAUTHORIZED, "Invalid Password")
     }
 
     if (findUser.status === "PENDING") {
