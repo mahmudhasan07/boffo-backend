@@ -50,7 +50,7 @@ const logInFromDB = (payload) => __awaiter(void 0, void 0, void 0, function* () 
         throw new ApiErrors_1.default(401, "Please check your email address to verify your account");
     }
     const { password } = findUser, userInfo = __rest(findUser, ["password"]);
-    const token = jwtHelper_1.jwtHelpers.generateToken(userInfo, secret_1.jwt_secret, "1hr");
+    const token = jwtHelper_1.jwtHelpers.generateToken(userInfo, secret_1.jwt_secret, "1d");
     return { accessToken: token, userInfo };
 });
 const forgetPassword = (payload) => __awaiter(void 0, void 0, void 0, function* () {

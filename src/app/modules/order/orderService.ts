@@ -33,12 +33,35 @@ const userOrdersFromDB = async (id: string) => {
 const allOrdersFromDB = async () => {
 
     const result = await prisma.order.findMany({
-        include:{
-            items : true
+        include: {
+            items: {
+                include: {
+                    productDetails: {
+                        select: {
+                            name: true,
+                            thumbnailImage: true,
+                            color: true
+                        }
+                    }
+                }
+            }
         }
     });
 
-    return result
+    const updatedResult = result.map(order => ({
+        ...order,
+        items: order.items.map(item => ({
+            ...item,
+            productDetails: {
+                ...item.productDetails,
+                thumbnailImage: item.productDetails.thumbnailImage
+                    ? `${process.env.BASE_URL}/uploads/${item.productDetails.thumbnailImage}`
+                    : null
+            }
+        }))
+    }));
+
+    return updatedResult
 }
 
 

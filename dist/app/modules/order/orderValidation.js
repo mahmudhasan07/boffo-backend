@@ -5,9 +5,10 @@ const zod_1 = require("zod");
 exports.orderConfirmValidation = zod_1.z.object({
     paymentId: zod_1.z.string(),
     totalPrice: zod_1.z.number(),
-    item: zod_1.z.array(zod_1.z.object({
+    items: zod_1.z.array(zod_1.z.object({
         productId: zod_1.z.string().min(1, "product id is required"),
         quantity: zod_1.z.number().positive("quantity must be positive"),
+        size: zod_1.z.string().min(1, "product id is required"),
         price: zod_1.z.number().positive("quantity must be positive"),
     })),
     info: zod_1.z.object({

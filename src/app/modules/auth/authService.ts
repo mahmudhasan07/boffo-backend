@@ -27,7 +27,7 @@ const logInFromDB = async (payload: { email: string, password: string }) => {
         throw new ApiError(401, "Please check your email address to verify your account")
     }
     const { password, ...userInfo } = findUser
-    const token = jwtHelpers.generateToken(userInfo, jwt_secret, "1hr") as Secret
+    const token = jwtHelpers.generateToken(userInfo, jwt_secret, "1d") as Secret
     return { accessToken: token, userInfo }
 }
 

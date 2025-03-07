@@ -3,10 +3,11 @@ import { z } from "zod";
 export const orderConfirmValidation = z.object({
     paymentId: z.string(),
     totalPrice: z.number(),
-    item: z.array(
+    items: z.array(
         z.object({
             productId: z.string().min(1, "product id is required"),
             quantity: z.number().positive("quantity must be positive"),
+            size: z.string().min(1, "product id is required"),
             price: z.number().positive("quantity must be positive"),
         })
     ),

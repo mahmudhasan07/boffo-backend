@@ -38,9 +38,22 @@ const userOrdersFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () 
 const allOrdersFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield prisma.order.findMany({
         include: {
-            items: true
+            items: {
+                include: {
+                    productDetails: {
+                        select: {
+                            name: true,
+                            thumbnailImage: true,
+                            color: true
+                        }
+                    }
+                }
+            }
         }
     });
-    return result;
+    const updatedResult = result.map(order => (Object.assign(Object.assign({}, order), { items: order.items.map(item => (Object.assign(Object.assign({}, item), { productDetails: Object.assign(Object.assign({}, item.productDetails), { thumbnailImage: item.productDetails.thumbnailImage
+                    ? `${process.env.BASE_URL}/uploads/${item.productDetails.thumbnailImage}`
+                    : null }) }))) })));
+    return updatedResult;
 });
 exports.orderService = { createOrder, userOrdersFromDB, allOrdersFromDB };
