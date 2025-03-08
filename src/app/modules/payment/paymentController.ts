@@ -11,16 +11,21 @@ const paymentSSLCommerceController = catchAsync(async (req: Request, res: Respon
     const body = req.body
     const userInfo = decode(token) as any
 
-    console.log(body);
 
 
-    const payload = { totalAmount: body.totalAmount, name: userInfo?.name, email: userInfo?.email }
-
-    const result = await paymentService.paymentSSLCommerce(payload)
-    console.log(result);
+    // const payload = { body, name: userInfo?.name, email: userInfo?.email }
+    const id = userInfo?.id
+    const result = await paymentService.paymentSSLCommerce(body, id)
+    // console.log(result);
 
     sendResponse(res, { statusCode: StatusCodes.ACCEPTED, message: "Payment successfully completed", success: true, data: result })
 
 })
 
-export const paymentController = { paymentSSLCommerceController }
+
+const updatePaymentController = catchAsync(async (req: Request, res: Response) => {
+    const body = req?.body
+    const result = await paymentService.updatePaymentIntoDB(body)
+})
+
+export const paymentController = { paymentSSLCommerceController, updatePaymentController }

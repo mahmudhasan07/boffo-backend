@@ -64,7 +64,7 @@ model Cart {
 model Order {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   userId     String   @db.ObjectId
-  paymentId  String
+  paymentId  String?
   totalPrice Int
   items      Items[]
   info       Json
