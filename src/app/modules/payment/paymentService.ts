@@ -25,18 +25,18 @@ const paymentSSLCommerce = async (payload: any, id: string) => {
             }
         }
     });
-    
+
     paymentCompleteID = result?.id
 
     const tran_id = new ObjectId().toString()
 
     const data = {
-        total_amount: parseFloat(payload?.totalAmount),
+        total_amount: parseFloat(payload?.totalPrice),
         currency: 'BDT',
         tran_id: tran_id, // use unique tran_id for each api call
-        success_url: `${process.env?.BASE_URL}/success`,
-        fail_url: `${process.env?.BASE_URL}/fail`,
-        cancel_url: `${process.env?.BASE_URL}/cancel`,
+        success_url: `${process.env?.BASE_URL}/api/v1/payment/success?tran_id=${tran_id}`,
+        fail_url: `${process.env?.BASE_URL}/api/v1/payment/fail`,
+        cancel_url: `${process.env?.BASE_URL}/api/v1/payment/cancel`,
         ipn_url: `${process.env?.BASE_URL}/ipn`,
         shipping_method: 'Courier',
         product_name: 'Computer.',
@@ -64,12 +64,9 @@ const paymentSSLCommerce = async (payload: any, id: string) => {
     try {
         const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live);
         const apiResponse = await sslcz.init(data);
-        console.log(apiResponse.GatewayPageURL);
-        
-        if (result && apiResponse.GatewayPageURL) {
+        // console.log(apiResponse);
+        return { redirectLink: apiResponse.GatewayPageURL };
 
-            return { redirectLink: apiResponse.GatewayPageURL };
-        }
     } catch (error) {
         console.error("SSLCommerz Error:", error);
         return { error: "Failed to generate payment link" };
@@ -78,9 +75,30 @@ const paymentSSLCommerce = async (payload: any, id: string) => {
 }
 
 
-const updatePaymentIntoDB = async (payload: any) => {
-    console.log(payload, paymentCompleteID);
+const updatePaymentIntoDB = async (paymentId: any) => {
+
+    console.log(paymentCompleteID);
+
+
+    const result = await prisma.order.update({
+        where: {
+            id: paymentCompleteID
+        },
+        data: {
+            paymentId: paymentId
+        }
+    })
+    return result
 
 }
 
-export const paymentService = { paymentSSLCommerce, updatePaymentIntoDB }
+const cancelPaymentIntoDB = async () => {
+    const result = await prisma.order.delete({
+        where: {
+            id: paymentCompleteID
+        }
+    })
+    return result
+}
+
+export const paymentService = { paymentSSLCommerce, updatePaymentIntoDB, cancelPaymentIntoDB }

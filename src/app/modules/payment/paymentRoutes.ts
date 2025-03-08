@@ -7,6 +7,8 @@ const route = Router()
 
 route.post("/", auth(Role.USER), paymentController.paymentSSLCommerceController)
 route.post("/success", paymentController.updatePaymentController)
+route.post("/cancel", paymentController.cancelPaymentController)
+route.post("/fail", paymentController.failPaymentController)
 
 
 export const paymentRoutes = route

@@ -22,10 +22,31 @@ const paymentSSLCommerceController = (0, catchAsync_1.default)((req, res) => __a
     const token = req.headers.authorization;
     const body = req.body;
     const userInfo = (0, jsonwebtoken_1.decode)(token);
-    console.log(body);
-    const payload = { totalAmount: body.totalAmount, name: userInfo === null || userInfo === void 0 ? void 0 : userInfo.name, email: userInfo === null || userInfo === void 0 ? void 0 : userInfo.email };
-    const result = yield paymentService_1.paymentService.paymentSSLCommerce(payload);
-    console.log(result);
+    // const payload = { body, name: userInfo?.name, email: userInfo?.email }
+    const id = userInfo === null || userInfo === void 0 ? void 0 : userInfo.id;
+    const result = yield paymentService_1.paymentService.paymentSSLCommerce(body, id);
     (0, sendResponse_1.default)(res, { statusCode: http_status_codes_1.StatusCodes.ACCEPTED, message: "Payment successfully completed", success: true, data: result });
 }));
-exports.paymentController = { paymentSSLCommerceController };
+const updatePaymentController = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const paymentId = (_a = req.query) === null || _a === void 0 ? void 0 : _a.tran_id;
+    const body = req === null || req === void 0 ? void 0 : req.body;
+    console.log(paymentId);
+    const result = yield paymentService_1.paymentService.updatePaymentIntoDB(paymentId);
+    if (result) {
+        res.redirect(`${process.env.WEB_URL}/success`);
+    }
+}));
+const cancelPaymentController = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield paymentService_1.paymentService.cancelPaymentIntoDB();
+    if (result) {
+        res.redirect(`${process.env.WEB_URL}/cancel`);
+    }
+}));
+const failPaymentController = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield paymentService_1.paymentService.cancelPaymentIntoDB();
+    if (result) {
+        res.redirect(`${process.env.WEB_URL}/cancel`);
+    }
+}));
+exports.paymentController = { paymentSSLCommerceController, updatePaymentController, cancelPaymentController, failPaymentController };
