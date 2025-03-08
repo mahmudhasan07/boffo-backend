@@ -14,6 +14,6 @@ const route = (0, express_1.Router)();
 route.post("/create", uploadFile_1.fileUploader.uploadProductImages, parseBodyData_1.parseBodyMiddleware, (0, validateRequest_1.default)(productValidation_1.productValidation), productController_1.productController.productAddController);
 route.get("/", productController_1.productController.productGetController);
 route.get("/:id", productController_1.productController.productGetSingleController);
-route.patch("/:id", productController_1.productController.productUpdateController);
+route.patch("/isFeature/:id", productController_1.productController.productFeatureProductController);
 route.delete("/:id", productController_1.productController.productDeleteController);
 exports.productRoutes = route;

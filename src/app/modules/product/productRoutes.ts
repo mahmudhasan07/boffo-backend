@@ -10,7 +10,7 @@ const route = Router()
 route.post("/create", fileUploader.uploadProductImages, parseBodyMiddleware, validateRequest(productValidation), productController.productAddController)
 route.get("/", productController.productGetController)
 route.get("/:id", productController.productGetSingleController)
-route.patch("/:id",  productController.productUpdateController)
+route.patch("/isFeature/:id", productController.productFeatureProductController)
 route.delete("/:id", productController.productDeleteController)
 
 export const productRoutes = route;

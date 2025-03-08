@@ -14,8 +14,10 @@ const productAddController = catchAsync(async (req: Request, res: Response) => {
 
 const productGetController = catchAsync(async (req: Request, res: Response) => {
     const category = req.query.category as string;
-    const result = await productService.getAllProducts(category);
-    const { data, limit, page, total, totalPage } = await paginationSystem(result, req);
+    const isFeature = req.query.isFeature === "true";
+    
+    const result = await productService.getAllProducts(category, isFeature);
+    const { data, limit, page, total, totalPage } = paginationSystem(result, req);
 
     sendResponse(res, { message: "Product fetched successfully", data: data, statusCode: StatusCodes.OK, success: true, meta: { limit: limit, page: page, total: total, totalPage: totalPage } });
 })
@@ -33,13 +35,11 @@ const productGetSingleController = catchAsync(async (req: Request, res: Response
 })
 
 
-const productUpdateController = catchAsync(async (req: Request, res: Response) => {
+const productFeatureProductController = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
-    const isFeatures = req.query.isFeatures as string;
-    const body = req.body;
-    const result = await productService.updateProduct(id, body, isFeatures);
+    const result = await productService.isFeatureProduct(id);
     sendResponse(res, { message: "Product updated successfully", data: result, statusCode: StatusCodes.OK, success: true });
 })
 
 
-export const productController = { productAddController, productGetController, productDeleteController, productGetSingleController, productUpdateController }
+export const productController = { productAddController, productGetController, productDeleteController, productGetSingleController, productFeatureProductController }

@@ -25,15 +25,22 @@ const createProductIntoDB = async (body: any, file: any) => {
 
 }
 
-const getAllProducts = async (category: string) => {
+const getAllProducts = async (category: string, isFeature: boolean) => {
 
-    if (category) {
+    if (category || isFeature) {
         const products = await prisma.product.findMany({
             where: {
-                category: {
-                    equals: category,
-                    mode: "insensitive"
-                }
+                OR: [
+                    {
+                        category: {
+                            equals: category,
+                            mode: "insensitive"
+                        }
+                    },
+                    {
+                        isFeature
+                    }
+                ]
             }
         })
 
@@ -91,11 +98,41 @@ const deleteProduct = async (id: string) => {
     return result;
 }
 
-const updateProduct = async (id: string, body: any, isFeatures: string) => {
+const isFeatureProduct = async (id: string) => {
+
+    const product = await prisma.product.findUnique({
+        where: {
+            id
+        }
+    })
+
+    if (product?.isFeature == false) {
+        const result = await prisma.product.update({
+            where: {
+                id
+            },
+            data: {
+                isFeature: true
+            }
+        })
+        return result;
+    } else {
+        const result = await prisma.product.update({
+            where: {
+                id
+            },
+            data: {
+                isFeature: false
+            }
+        })
+        return result;
+    }
+
+
 
 }
 
 
 
 
-export const productService = { createProductIntoDB, getAllProducts, getSingleProduct, deleteProduct, updateProduct }
+export const productService = { createProductIntoDB, getAllProducts, getSingleProduct, deleteProduct, isFeatureProduct }

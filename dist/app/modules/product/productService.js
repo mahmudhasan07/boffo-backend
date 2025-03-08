@@ -26,14 +26,21 @@ const createProductIntoDB = (body, file) => __awaiter(void 0, void 0, void 0, fu
     });
     return result;
 });
-const getAllProducts = (category) => __awaiter(void 0, void 0, void 0, function* () {
-    if (category) {
+const getAllProducts = (category, isFeature) => __awaiter(void 0, void 0, void 0, function* () {
+    if (category || isFeature) {
         const products = yield prisma.product.findMany({
             where: {
-                category: {
-                    equals: category,
-                    mode: "insensitive"
-                }
+                OR: [
+                    {
+                        category: {
+                            equals: category,
+                            mode: "insensitive"
+                        }
+                    },
+                    {
+                        isFeature
+                    }
+                ]
             }
         });
         const response = products.map((product) => {
@@ -76,6 +83,33 @@ const deleteProduct = (id) => __awaiter(void 0, void 0, void 0, function* () {
     });
     return result;
 });
-const updateProduct = (id, body, isFeatures) => __awaiter(void 0, void 0, void 0, function* () {
+const isFeatureProduct = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const product = yield prisma.product.findUnique({
+        where: {
+            id
+        }
+    });
+    if ((product === null || product === void 0 ? void 0 : product.isFeature) == false) {
+        const result = yield prisma.product.update({
+            where: {
+                id
+            },
+            data: {
+                isFeature: true
+            }
+        });
+        return result;
+    }
+    else {
+        const result = yield prisma.product.update({
+            where: {
+                id
+            },
+            data: {
+                isFeature: false
+            }
+        });
+        return result;
+    }
 });
-exports.productService = { createProductIntoDB, getAllProducts, getSingleProduct, deleteProduct, updateProduct };
+exports.productService = { createProductIntoDB, getAllProducts, getSingleProduct, deleteProduct, isFeatureProduct };
