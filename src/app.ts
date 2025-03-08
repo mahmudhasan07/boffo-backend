@@ -16,7 +16,8 @@ export const corsOptions = {
     origin: [
         // "https://tasneem-social-frontend.netlify.app",
         "http://localhost:3000",
-        "https://practise-six.vercel.app"
+        "https://practise-six.vercel.app",
+        "https://boffo-frontend.vercel.app"
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
