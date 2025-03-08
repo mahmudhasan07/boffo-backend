@@ -35,7 +35,7 @@ const prisma = new client_1.PrismaClient();
 const logInFromDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const findUser = yield prisma.user.findUnique({
         where: {
-            email: payload.email
+            email: payload === null || payload === void 0 ? void 0 : payload.email
         }
     });
     if (!findUser) {
@@ -56,7 +56,7 @@ const logInFromDB = (payload) => __awaiter(void 0, void 0, void 0, function* () 
 const forgetPassword = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const findUser = yield prisma.user.findUnique({
         where: {
-            email: payload.email
+            email: payload === null || payload === void 0 ? void 0 : payload.email
         }
     });
     if (!findUser) {

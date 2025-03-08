@@ -11,7 +11,7 @@ const prisma = new PrismaClient();
 const logInFromDB = async (payload: { email: string, password: string }) => {
     const findUser = await prisma.user.findUnique({
         where: {
-            email: payload.email
+            email: payload?.email
         }
     })
     if (!findUser) {
@@ -34,7 +34,7 @@ const logInFromDB = async (payload: { email: string, password: string }) => {
 const forgetPassword = async (payload: { email: string }) => {
     const findUser = await prisma.user.findUnique({
         where: {
-            email: payload.email
+            email: payload?.email
         }
     })
     if (!findUser) {
