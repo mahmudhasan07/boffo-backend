@@ -24,6 +24,17 @@ const userOrdersFromDB = async (id: string) => {
     const result = await prisma.order.findMany({
         where: {
             userId: id
+        },
+        select: {
+            items: true,
+            paymentId: true,
+            totalPrice: true,
+            status: true,
+            id: true,
+            isPayment: true
+
+            
+
         }
     });
 
