@@ -5,6 +5,6 @@ import { paymentController } from "./paymentController";
 
 const route = Router()
 
-route.get("/", auth(Role.USER), paymentController.paymentSSLCommerceController)
+route.post("/", auth(Role.USER), paymentController.paymentSSLCommerceController)
 
 export const paymentRoutes = route
