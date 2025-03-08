@@ -31,6 +31,21 @@ const userOrdersFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () 
     const result = yield prisma.order.findMany({
         where: {
             userId: id
+        },
+        select: {
+            items: {
+                select: {
+                    quantity: true,
+                    price: true,
+                    size: true,
+                    productDetails: true
+                }
+            },
+            paymentId: true,
+            totalPrice: true,
+            status: true,
+            id: true,
+            isPayment: true
         }
     });
     return result;

@@ -26,14 +26,21 @@ const userOrdersFromDB = async (id: string) => {
             userId: id
         },
         select: {
-            items: true,
+            items: {
+                select: {
+                    quantity: true,
+                    price: true,
+                    size: true,
+                    productDetails: true
+                }
+            },
             paymentId: true,
             totalPrice: true,
             status: true,
             id: true,
             isPayment: true
 
-            
+
 
         }
     });
