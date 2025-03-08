@@ -26,11 +26,15 @@ const productAddController = (0, catchAsync_1.default)((req, res) => __awaiter(v
 }));
 const productGetController = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const category = req.query.category;
-    const isFeature = req.query.isFeature === "true";
-    const result = yield productService_1.productService.getAllProducts(category, isFeature);
+    const gender = req.query.gender;
+    const feature = req.query.isFeature;
+    const result = yield productService_1.productService.getAllProducts(feature, category, gender.toUpperCase());
     const { data, limit, page, total, totalPage } = (0, pagination_1.paginationSystem)(result, req);
     (0, sendResponse_1.default)(res, { message: "Product fetched successfully", data: data, statusCode: http_status_codes_1.StatusCodes.OK, success: true, meta: { limit: limit, page: page, total: total, totalPage: totalPage } });
 }));
+// const featureProductController = catchAsync(async(req: Request, res: Response)=>{
+//     const result = await productService.getAllProducts();
+// })
 const productDeleteController = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const result = yield productService_1.productService.deleteProduct(id);

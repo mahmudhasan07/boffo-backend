@@ -49,11 +49,9 @@ const allUserFormDB = async () => {
 
 const verifyOTP = async (req: Request) => {
     const email = req.query.email as string
-    console.log(email)
 
     const otp = req.body
     const getOTP = myCache.get(email)
-    console.log(getOTP, otp);
 
     if (!getOTP) {
         throw new ApiError(StatusCodes.NOT_FOUND, "OTP is expired")

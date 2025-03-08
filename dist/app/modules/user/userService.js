@@ -48,10 +48,8 @@ const allUserFormDB = () => __awaiter(void 0, void 0, void 0, function* () {
 // }
 const verifyOTP = (req) => __awaiter(void 0, void 0, void 0, function* () {
     const email = req.query.email;
-    console.log(email);
     const otp = req.body;
     const getOTP = app_1.myCache.get(email);
-    console.log(getOTP, otp);
     if (!getOTP) {
         throw new ApiErrors_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "OTP is expired");
     }

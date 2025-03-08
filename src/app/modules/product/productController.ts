@@ -14,13 +14,19 @@ const productAddController = catchAsync(async (req: Request, res: Response) => {
 
 const productGetController = catchAsync(async (req: Request, res: Response) => {
     const category = req.query.category as string;
-    const isFeature = req.query.isFeature === "true";
-    
-    const result = await productService.getAllProducts(category, isFeature);
+    const gender = req.query.gender as any
+    const feature = req.query.isFeature as string;
+
+
+    const result = await productService.getAllProducts(feature, category, gender.toUpperCase());
     const { data, limit, page, total, totalPage } = paginationSystem(result, req);
 
     sendResponse(res, { message: "Product fetched successfully", data: data, statusCode: StatusCodes.OK, success: true, meta: { limit: limit, page: page, total: total, totalPage: totalPage } });
 })
+
+// const featureProductController = catchAsync(async(req: Request, res: Response)=>{
+//     const result = await productService.getAllProducts();
+// })
 
 const productDeleteController = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;

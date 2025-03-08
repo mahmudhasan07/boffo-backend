@@ -26,22 +26,27 @@ const createProductIntoDB = (body, file) => __awaiter(void 0, void 0, void 0, fu
     });
     return result;
 });
-const getAllProducts = (category, isFeature) => __awaiter(void 0, void 0, void 0, function* () {
-    if (category || isFeature) {
+const getAllProducts = (feature, category, gender) => __awaiter(void 0, void 0, void 0, function* () {
+    if (feature == "true") {
         const products = yield prisma.product.findMany({
             where: {
-                OR: [
-                    {
-                        category: {
-                            equals: category,
-                            mode: "insensitive"
-                        }
-                    },
-                    {
-                        isFeature
-                    }
-                ]
-            }
+                isFeature: true
+            },
+        });
+        const response = products.map((product) => {
+            return Object.assign(Object.assign({}, product), { productImages: product.productImages ? product.productImages.map((image) => `${process.env.BASE_URL}/uploads/${image}`) : null, thumbnailImage: product.thumbnailImage ? `${process.env.BASE_URL}/uploads/${product.thumbnailImage}` : null });
+        });
+        return response;
+    }
+    if (category && gender) {
+        const products = yield prisma.product.findMany({
+            where: {
+                category: {
+                    equals: category,
+                    mode: "insensitive"
+                },
+                gender: gender
+            },
         });
         const response = products.map((product) => {
             return Object.assign(Object.assign({}, product), { productImages: product.productImages ? product.productImages.map((image) => `${process.env.BASE_URL}/uploads/${image}`) : null, thumbnailImage: product.thumbnailImage ? `${process.env.BASE_URL}/uploads/${product.thumbnailImage}` : null });

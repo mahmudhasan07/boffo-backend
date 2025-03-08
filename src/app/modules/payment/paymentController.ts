@@ -25,9 +25,9 @@ const paymentSSLCommerceController = catchAsync(async (req: Request, res: Respon
 const updatePaymentController = catchAsync(async (req: Request, res: Response) => {
     const paymentId = req.query?.tran_id
     const body = req?.body
-    console.log(paymentId);
 
     const result = await paymentService.updatePaymentIntoDB(paymentId)
+
     if (result) {
         res.redirect(`${process.env.WEB_URL}/success`)
 
@@ -35,14 +35,16 @@ const updatePaymentController = catchAsync(async (req: Request, res: Response) =
 })
 const cancelPaymentController = catchAsync(async (req: Request, res: Response) => {
 
-    const result = await paymentService.cancelPaymentIntoDB()
+    const id = req.query.id as string
+
+    const result = await paymentService.cancelPaymentIntoDB(id)
     if (result) {
         res.redirect(`${process.env.WEB_URL}/cancel`)
     }
 })
 const failPaymentController = catchAsync(async (req: Request, res: Response) => {
-
-    const result = await paymentService.cancelPaymentIntoDB()
+    const id = req.query.id as string
+    const result = await paymentService.cancelPaymentIntoDB(id)
     if (result) {
         res.redirect(`${process.env.WEB_URL}/cancel`)
 

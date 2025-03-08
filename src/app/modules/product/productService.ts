@@ -1,7 +1,8 @@
-import { PrismaClient, Product } from "@prisma/client";
+import { Gender, PrismaClient, Product } from "@prisma/client";
 import { deleteImage } from "../../helper/deleteFile";
 import ApiError from "../../error/ApiErrors";
 import { StatusCodes } from "http-status-codes";
+import { features } from "process";
 
 const prisma = new PrismaClient();
 
@@ -25,23 +26,15 @@ const createProductIntoDB = async (body: any, file: any) => {
 
 }
 
-const getAllProducts = async (category: string, isFeature: boolean) => {
+const getAllProducts = async (feature: string, category: string, gender: Gender) => {
 
-    if (category || isFeature) {
+    if (feature == "true") {
         const products = await prisma.product.findMany({
             where: {
-                OR: [
-                    {
-                        category: {
-                            equals: category,
-                            mode: "insensitive"
-                        }
-                    },
-                    {
-                        isFeature
-                    }
-                ]
-            }
+                isFeature: true
+            },
+
+
         })
 
         const response = products.map((product) => {
@@ -53,6 +46,31 @@ const getAllProducts = async (category: string, isFeature: boolean) => {
         })
         return response;
     }
+
+    if (category && gender) {
+        const products = await prisma.product.findMany({
+            where: {
+                category: {
+                    equals: category,
+                    mode: "insensitive"
+                },
+                gender: gender
+            },
+
+
+        })
+
+        const response = products.map((product) => {
+            return {
+                ...product,
+                productImages: product.productImages ? product.productImages.map((image) => `${process.env.BASE_URL}/uploads/${image}`) : null,
+                thumbnailImage: product.thumbnailImage ? `${process.env.BASE_URL}/uploads/${product.thumbnailImage}` : null
+            }
+        })
+        return response;
+    }
+
+    
 
     const products = await prisma.product.findMany();
     const response = products.map((product) => {

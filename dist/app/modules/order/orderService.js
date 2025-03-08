@@ -38,14 +38,20 @@ const userOrdersFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () 
                     quantity: true,
                     price: true,
                     size: true,
-                    productDetails: true
+                    productDetails: {
+                        select: {
+                            thumbnailImage: true
+                        }
+                    }
                 }
             },
             paymentId: true,
             totalPrice: true,
             status: true,
             id: true,
-            isPayment: true
+            isPayment: true,
+            createdAt: true,
+            updatedAt: true
         }
     });
     return result;

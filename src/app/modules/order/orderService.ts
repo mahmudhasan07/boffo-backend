@@ -31,14 +31,20 @@ const userOrdersFromDB = async (id: string) => {
                     quantity: true,
                     price: true,
                     size: true,
-                    productDetails: true
+                    productDetails: {
+                        select : {
+                            thumbnailImage : true
+                        }
+                    }
                 }
             },
             paymentId: true,
             totalPrice: true,
             status: true,
             id: true,
-            isPayment: true
+            isPayment: true,
+            createdAt : true,
+            updatedAt : true
 
 
 

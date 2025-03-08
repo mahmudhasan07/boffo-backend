@@ -31,20 +31,21 @@ const updatePaymentController = (0, catchAsync_1.default)((req, res) => __awaite
     var _a;
     const paymentId = (_a = req.query) === null || _a === void 0 ? void 0 : _a.tran_id;
     const body = req === null || req === void 0 ? void 0 : req.body;
-    console.log(paymentId);
     const result = yield paymentService_1.paymentService.updatePaymentIntoDB(paymentId);
     if (result) {
         res.redirect(`${process.env.WEB_URL}/success`);
     }
 }));
 const cancelPaymentController = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield paymentService_1.paymentService.cancelPaymentIntoDB();
+    const id = req.query.id;
+    const result = yield paymentService_1.paymentService.cancelPaymentIntoDB(id);
     if (result) {
         res.redirect(`${process.env.WEB_URL}/cancel`);
     }
 }));
 const failPaymentController = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield paymentService_1.paymentService.cancelPaymentIntoDB();
+    const id = req.query.id;
+    const result = yield paymentService_1.paymentService.cancelPaymentIntoDB(id);
     if (result) {
         res.redirect(`${process.env.WEB_URL}/cancel`);
     }

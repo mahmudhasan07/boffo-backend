@@ -35,9 +35,9 @@ const paymentSSLCommerce = async (payload: any, id: string) => {
         currency: 'BDT',
         tran_id: tran_id, // use unique tran_id for each api call
         success_url: `${process.env?.BASE_URL}/api/v1/payment/success?tran_id=${tran_id}`,
-        fail_url: `${process.env?.BASE_URL}/api/v1/payment/fail`,
-        cancel_url: `${process.env?.BASE_URL}/api/v1/payment/cancel`,
-        ipn_url: `${process.env?.BASE_URL}/ipn`,
+        fail_url: `${process.env?.BASE_URL}/api/v1/payment/fail?id=${result?.id}`,
+        cancel_url: `${process.env?.BASE_URL}/api/v1/payment/cancel?id=${result?.id}`,
+        // ipn_url: `${process.env?.BASE_URL}/api/v1/payment/ipn`,
         shipping_method: 'Courier',
         product_name: 'Computer.',
         product_category: 'Electronic',
@@ -77,9 +77,6 @@ const paymentSSLCommerce = async (payload: any, id: string) => {
 
 const updatePaymentIntoDB = async (paymentId: any) => {
 
-    console.log(paymentCompleteID);
-
-
     const result = await prisma.order.update({
         where: {
             id: paymentCompleteID
@@ -92,12 +89,20 @@ const updatePaymentIntoDB = async (paymentId: any) => {
 
 }
 
-const cancelPaymentIntoDB = async () => {
+const cancelPaymentIntoDB = async (id: string) => {
+
+    await prisma.items.deleteMany({
+        where: {
+            orderId: id
+        }
+    });
+
     const result = await prisma.order.delete({
         where: {
-            id: paymentCompleteID
+            id: id
         }
-    })
+    });
+
     return result
 }
 

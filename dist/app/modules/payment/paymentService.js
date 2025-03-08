@@ -24,7 +24,7 @@ const store_passwd = secret_1.ssl_password;
 const is_live = false; //true for live, false for sandbox
 let paymentCompleteID;
 const paymentSSLCommerce = (payload, id) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b, _c, _d, _e;
+    var _a, _b, _c, _d;
     const result = yield prisma.order.create({
         data: {
             userId: id,
@@ -42,9 +42,9 @@ const paymentSSLCommerce = (payload, id) => __awaiter(void 0, void 0, void 0, fu
         currency: 'BDT',
         tran_id: tran_id, // use unique tran_id for each api call
         success_url: `${(_b = process.env) === null || _b === void 0 ? void 0 : _b.BASE_URL}/api/v1/payment/success?tran_id=${tran_id}`,
-        fail_url: `${(_c = process.env) === null || _c === void 0 ? void 0 : _c.BASE_URL}/api/v1/payment/fail`,
-        cancel_url: `${(_d = process.env) === null || _d === void 0 ? void 0 : _d.BASE_URL}/api/v1/payment/cancel`,
-        ipn_url: `${(_e = process.env) === null || _e === void 0 ? void 0 : _e.BASE_URL}/ipn`,
+        fail_url: `${(_c = process.env) === null || _c === void 0 ? void 0 : _c.BASE_URL}/api/v1/payment/fail?id=${result === null || result === void 0 ? void 0 : result.id}`,
+        cancel_url: `${(_d = process.env) === null || _d === void 0 ? void 0 : _d.BASE_URL}/api/v1/payment/cancel?id=${result === null || result === void 0 ? void 0 : result.id}`,
+        // ipn_url: `${process.env?.BASE_URL}/api/v1/payment/ipn`,
         shipping_method: 'Courier',
         product_name: 'Computer.',
         product_category: 'Electronic',
@@ -79,7 +79,6 @@ const paymentSSLCommerce = (payload, id) => __awaiter(void 0, void 0, void 0, fu
     }
 });
 const updatePaymentIntoDB = (paymentId) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(paymentCompleteID);
     const result = yield prisma.order.update({
         where: {
             id: paymentCompleteID
@@ -90,10 +89,15 @@ const updatePaymentIntoDB = (paymentId) => __awaiter(void 0, void 0, void 0, fun
     });
     return result;
 });
-const cancelPaymentIntoDB = () => __awaiter(void 0, void 0, void 0, function* () {
+const cancelPaymentIntoDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    yield prisma.items.deleteMany({
+        where: {
+            orderId: id
+        }
+    });
     const result = yield prisma.order.delete({
         where: {
-            id: paymentCompleteID
+            id: id
         }
     });
     return result;
