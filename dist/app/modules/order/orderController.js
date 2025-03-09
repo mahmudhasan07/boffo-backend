@@ -37,4 +37,10 @@ const adminOrdersController = (0, catchAsync_1.default)((req, res) => __awaiter(
     const { data, limit, page, total, totalPage } = (0, pagination_1.paginationSystem)(result, req);
     (0, sendResponse_1.default)(res, { statusCode: http_status_codes_1.StatusCodes.OK, message: "Orders fetched successfully", success: true, data: data, meta: { limit: limit, page: page, total: total, totalPage: totalPage } });
 }));
-exports.orderController = { createOrderController, adminOrdersController, userOrdersController };
+const adminStatusController = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    const body = req.body;
+    const result = yield orderService_1.orderService.statusUpdateFormDB(body, id);
+    (0, sendResponse_1.default)(res, { statusCode: http_status_codes_1.StatusCodes.OK, message: "Orders fetched successfully", success: true, data: result });
+}));
+exports.orderController = { createOrderController, adminOrdersController, userOrdersController, adminStatusController };

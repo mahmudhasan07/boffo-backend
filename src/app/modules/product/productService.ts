@@ -116,40 +116,18 @@ const deleteProduct = async (id: string) => {
     return result;
 }
 
-const isFeatureProduct = async (id: string) => {
+const isFeatureProduct = async (id: string, body : {isFeatured : boolean}) => {
 
-    const product = await prisma.product.findUnique({
+    const result = await prisma.product.update({
         where: {
             id
+        },
+        data: {
+            isFeature: body.isFeatured
         }
     })
-
-    if (product?.isFeature == false) {
-        const result = await prisma.product.update({
-            where: {
-                id
-            },
-            data: {
-                isFeature: true
-            }
-        })
-        return result;
-    } else {
-        const result = await prisma.product.update({
-            where: {
-                id
-            },
-            data: {
-                isFeature: false
-            }
-        })
-        return result;
-    }
-
-
-
+    return result;
 }
-
 
 
 

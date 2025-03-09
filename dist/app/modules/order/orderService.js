@@ -58,9 +58,19 @@ const userOrdersFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () 
 });
 const allOrdersFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield prisma.order.findMany({
-        include: {
+        select: {
+            id: true,
+            paymentId: true,
+            status: true,
+            totalPrice: true,
+            createdAt: true,
+            info: true,
             items: {
-                include: {
+                select: {
+                    orderId: true,
+                    quantity: true,
+                    size: true,
+                    id: true,
                     productDetails: {
                         select: {
                             name: true,
@@ -68,8 +78,11 @@ const allOrdersFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
                             color: true
                         }
                     }
-                }
-            }
+                },
+            },
+        },
+        orderBy: {
+            createdAt: "desc"
         }
     });
     const updatedResult = result.map(order => (Object.assign(Object.assign({}, order), { items: order.items.map(item => (Object.assign(Object.assign({}, item), { productDetails: Object.assign(Object.assign({}, item.productDetails), { thumbnailImage: item.productDetails.thumbnailImage
@@ -77,4 +90,15 @@ const allOrdersFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
                     : null }) }))) })));
     return updatedResult;
 });
-exports.orderService = { createOrder, userOrdersFromDB, allOrdersFromDB };
+const statusUpdateFormDB = (payload, id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield prisma.order.update({
+        where: {
+            id: id
+        },
+        data: {
+            status: payload.status
+        }
+    });
+    return result;
+});
+exports.orderService = { createOrder, userOrdersFromDB, allOrdersFromDB, statusUpdateFormDB };

@@ -28,7 +28,7 @@ const productGetController = (0, catchAsync_1.default)((req, res) => __awaiter(v
     const category = req.query.category;
     const gender = req.query.gender;
     const feature = req.query.isFeature;
-    const result = yield productService_1.productService.getAllProducts(feature, category, gender.toUpperCase());
+    const result = yield productService_1.productService.getAllProducts(feature, category, gender ? gender.toUpperCase() : "");
     const { data, limit, page, total, totalPage } = (0, pagination_1.paginationSystem)(result, req);
     (0, sendResponse_1.default)(res, { message: "Product fetched successfully", data: data, statusCode: http_status_codes_1.StatusCodes.OK, success: true, meta: { limit: limit, page: page, total: total, totalPage: totalPage } });
 }));
@@ -47,7 +47,8 @@ const productGetSingleController = (0, catchAsync_1.default)((req, res) => __awa
 }));
 const productFeatureProductController = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const result = yield productService_1.productService.isFeatureProduct(id);
+    const body = req.body;
+    const result = yield productService_1.productService.isFeatureProduct(id, body);
     (0, sendResponse_1.default)(res, { message: "Product updated successfully", data: result, statusCode: http_status_codes_1.StatusCodes.OK, success: true });
 }));
 exports.productController = { productAddController, productGetController, productDeleteController, productGetSingleController, productFeatureProductController };

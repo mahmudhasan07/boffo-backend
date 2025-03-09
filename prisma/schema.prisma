@@ -69,7 +69,7 @@ model Order {
   items      Items[]
   info       Json
   isPayment  Boolean  @default(true)
-  status     Status   @default(PENDING)
+  status     ProductStatus   @default(PENDING)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
@@ -96,6 +96,13 @@ enum Status {
   PENDING
   ACTIVE
   BLOCKED
+}
+
+enum ProductStatus {
+  PENDING
+  PROGRESS
+  COMPLETED
+  CANCELED
 }
 
 enum Gender {

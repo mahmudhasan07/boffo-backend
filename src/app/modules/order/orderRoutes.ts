@@ -13,5 +13,7 @@ route.get("/my-orders", auth(Role.USER), orderController.userOrdersController)
 
 route.get("/", auth(Role.ADMIN), orderController.adminOrdersController)
 
+route.patch("/status/:id", auth(Role.ADMIN), orderController.adminStatusController)
+
 
 export const orderRoutes = route

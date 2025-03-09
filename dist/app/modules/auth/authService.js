@@ -62,7 +62,7 @@ const forgetPassword = (payload) => __awaiter(void 0, void 0, void 0, function* 
     if (!findUser) {
         throw new Error("User not found");
     }
-    const token = jwtHelper_1.jwtHelpers.generateToken({ email: findUser.email, id: findUser === null || findUser === void 0 ? void 0 : findUser.id, role: findUser === null || findUser === void 0 ? void 0 : findUser.role }, secret_1.jwt_secret, "1hr");
+    const token = jwtHelper_1.jwtHelpers.generateToken({ email: findUser.email, id: findUser === null || findUser === void 0 ? void 0 : findUser.id, role: findUser === null || findUser === void 0 ? void 0 : findUser.role }, secret_1.jwt_secret, "24hr");
     return token;
 });
 exports.authService = { logInFromDB, forgetPassword };

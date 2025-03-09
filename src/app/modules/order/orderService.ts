@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client"
+import { PrismaClient, ProductStatus } from "@prisma/client"
 
 const prisma = new PrismaClient()
 const createOrder = async (payload: any, id: string) => {
@@ -32,8 +32,8 @@ const userOrdersFromDB = async (id: string) => {
                     price: true,
                     size: true,
                     productDetails: {
-                        select : {
-                            thumbnailImage : true
+                        select: {
+                            thumbnailImage: true
                         }
                     }
                 }
@@ -43,8 +43,8 @@ const userOrdersFromDB = async (id: string) => {
             status: true,
             id: true,
             isPayment: true,
-            createdAt : true,
-            updatedAt : true
+            createdAt: true,
+            updatedAt: true
 
 
 
@@ -57,9 +57,19 @@ const userOrdersFromDB = async (id: string) => {
 const allOrdersFromDB = async () => {
 
     const result = await prisma.order.findMany({
-        include: {
+        select: {
+            id: true,
+            paymentId: true,
+            status: true,
+            totalPrice: true,
+            createdAt: true,
+            info: true,
             items: {
-                include: {
+                select: {
+                    orderId: true,
+                    quantity: true,
+                    size: true,
+                    id: true,
                     productDetails: {
                         select: {
                             name: true,
@@ -67,10 +77,16 @@ const allOrdersFromDB = async () => {
                             color: true
                         }
                     }
-                }
-            }
+                },
+
+            },
+        },
+        orderBy: {
+            createdAt: "desc"
         }
     });
+
+
 
     const updatedResult = result.map(order => ({
         ...order,
@@ -88,5 +104,19 @@ const allOrdersFromDB = async () => {
     return updatedResult
 }
 
+const statusUpdateFormDB = async (payload: { status: string }, id: string) => {
 
-export const orderService = { createOrder, userOrdersFromDB, allOrdersFromDB }
+    const result = await prisma.order.update({
+        where: {
+            id: id
+        },
+        data: {
+            status: payload.status as ProductStatus
+        }
+    })
+    return result
+
+}
+
+
+export const orderService = { createOrder, userOrdersFromDB, allOrdersFromDB, statusUpdateFormDB }

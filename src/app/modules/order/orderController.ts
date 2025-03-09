@@ -29,4 +29,12 @@ const adminOrdersController = catchAsync(async (req: Request, res: Response) => 
     sendResponse(res, { statusCode: StatusCodes.OK, message: "Orders fetched successfully", success: true, data: data, meta: { limit: limit, page: page, total: total, totalPage: totalPage } })
 })
 
-export const orderController = { createOrderController, adminOrdersController, userOrdersController }
+const adminStatusController = catchAsync(async (req: Request, res: Response) => {
+    const id = req.params.id
+    const body = req.body
+    const result = await orderService.statusUpdateFormDB(body, id)
+    sendResponse(res, { statusCode: StatusCodes.OK, message: "Orders fetched successfully", success: true, data: result })
+
+})
+
+export const orderController = { createOrderController, adminOrdersController, userOrdersController, adminStatusController }

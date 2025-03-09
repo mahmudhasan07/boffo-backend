@@ -38,7 +38,7 @@ const getAllProducts = (feature, category, gender) => __awaiter(void 0, void 0, 
         });
         return response;
     }
-    if (category && gender) {
+    if (category != undefined && gender == "MALE" || gender == "FEMALE") {
         const products = yield prisma.product.findMany({
             where: {
                 category: {
@@ -88,33 +88,15 @@ const deleteProduct = (id) => __awaiter(void 0, void 0, void 0, function* () {
     });
     return result;
 });
-const isFeatureProduct = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const product = yield prisma.product.findUnique({
+const isFeatureProduct = (id, body) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield prisma.product.update({
         where: {
             id
+        },
+        data: {
+            isFeature: body.isFeatured
         }
     });
-    if ((product === null || product === void 0 ? void 0 : product.isFeature) == false) {
-        const result = yield prisma.product.update({
-            where: {
-                id
-            },
-            data: {
-                isFeature: true
-            }
-        });
-        return result;
-    }
-    else {
-        const result = yield prisma.product.update({
-            where: {
-                id
-            },
-            data: {
-                isFeature: false
-            }
-        });
-        return result;
-    }
+    return result;
 });
 exports.productService = { createProductIntoDB, getAllProducts, getSingleProduct, deleteProduct, isFeatureProduct };

@@ -14,4 +14,5 @@ const route = (0, express_1.Router)();
 route.post('/create', (0, auth_1.default)(client_1.Role.USER), (0, validateRequest_1.default)(orderValidation_1.orderConfirmValidation), orderController_1.orderController.createOrderController);
 route.get("/my-orders", (0, auth_1.default)(client_1.Role.USER), orderController_1.orderController.userOrdersController);
 route.get("/", (0, auth_1.default)(client_1.Role.ADMIN), orderController_1.orderController.adminOrdersController);
+route.patch("/status/:id", (0, auth_1.default)(client_1.Role.ADMIN), orderController_1.orderController.adminStatusController);
 exports.orderRoutes = route;
