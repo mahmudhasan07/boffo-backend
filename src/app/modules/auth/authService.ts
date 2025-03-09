@@ -40,7 +40,7 @@ const forgetPassword = async (payload: { email: string }) => {
     if (!findUser) {
         throw new Error("User not found")
     }
-    const token = jwtHelpers.generateToken({ email: findUser.email, id: findUser?.id, role: findUser?.role }, jwt_secret, "1hr") as Secret
+    const token = jwtHelpers.generateToken({ email: findUser.email, id: findUser?.id, role: findUser?.role }, jwt_secret, "24hr") as Secret
     return token
 }
 

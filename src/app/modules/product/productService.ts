@@ -47,7 +47,7 @@ const getAllProducts = async (feature: string, category: string, gender: Gender)
         return response;
     }
 
-    if (category && gender) {
+    if (category != undefined && gender == "MALE" || gender == "FEMALE") {
         const products = await prisma.product.findMany({
             where: {
                 category: {
@@ -70,7 +70,7 @@ const getAllProducts = async (feature: string, category: string, gender: Gender)
         return response;
     }
 
-    
+
 
     const products = await prisma.product.findMany();
     const response = products.map((product) => {
